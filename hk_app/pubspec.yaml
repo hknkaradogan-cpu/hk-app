@@ -1,0 +1,42 @@
+name: hk_app
+description: Housekeeping Management App
+
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.6
+
+  # Supabase
+  supabase_flutter: ^2.3.4
+
+  # State management
+  provider: ^6.1.2
+
+  # CSV parse
+  csv: ^6.0.0
+
+  # File picker (CSV upload)
+  file_picker: ^8.0.3
+
+  # UI
+  intl: ^0.19.0
+
+  # Environment variables
+  flutter_dotenv: ^5.1.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/env.txt
