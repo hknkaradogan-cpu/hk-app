@@ -244,8 +244,7 @@ button{cursor:pointer;border:none;font-family:var(--ff);background:none;-webkit-
 </div>
 
 <script>
-const API_KEY = 'AIzaSyAvKgRZCkN2j2l37DoKPEWfnVodP__xliM';
-const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + API_KEY;
+const PROXY_URL = 'https://YOUR_PROJECT.supabase.co/functions/v1/gemini-proxy';
 const PDFJS_SRC = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
 const PDFJS_WRK = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 const LS_KEY = 'hke_v3';
@@ -504,18 +503,15 @@ async function aiCall(prompt,maxTok=800){
   const ctrl=new AbortController();
   const tid=setTimeout(()=>ctrl.abort(),45000);
   try{
-    const resp=await fetch(API_URL,{
+    const resp=await fetch(PROXY_URL,{
       method:'POST',signal:ctrl.signal,
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        contents:[{parts:[{text:SYS+'\n\n'+prompt}]}],
-        generationConfig:{maxOutputTokens:maxTok,temperature:0.2}
-      })
+      body:JSON.stringify({prompt,maxTokens:maxTok,sys:SYS})
     });
     clearTimeout(tid);
     if(!resp.ok){let e={};try{e=await resp.json();}catch(_){}throw new Error(parseApiError(resp.status,e));}
     const data=await resp.json();
-    return data?.candidates?.[0]?.content?.parts?.[0]?.text||'';
+    return data?.text||'';
   }catch(err){
     clearTimeout(tid);
     if(err.name==='AbortError')throw new Error('Zaman asimi (45sn). Internet baglantinizi kontrol edin.');
@@ -526,24 +522,16 @@ async function aiCall(prompt,maxTok=800){
 async function aiVision(b64list,prompt,maxTok=4096){
   const ctrl=new AbortController();
   const tid=setTimeout(()=>ctrl.abort(),90000);
-  const parts=[
-    {text:SYS},
-    ...b64list.map(b64=>({inlineData:{mimeType:'image/jpeg',data:b64}})),
-    {text:prompt}
-  ];
   try{
-    const resp=await fetch(API_URL,{
+    const resp=await fetch(PROXY_URL,{
       method:'POST',signal:ctrl.signal,
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        contents:[{parts}],
-        generationConfig:{maxOutputTokens:maxTok,temperature:0.1}
-      })
+      body:JSON.stringify({prompt,maxTokens:maxTok,vision:true,images:b64list,sys:SYS})
     });
     clearTimeout(tid);
     if(!resp.ok){let e={};try{e=await resp.json();}catch(_){}throw new Error(parseApiError(resp.status,e));}
     const data=await resp.json();
-    return data?.candidates?.[0]?.content?.parts?.[0]?.text||'';
+    return data?.text||'';
   }catch(err){
     clearTimeout(tid);
     if(err.name==='AbortError')throw new Error('Zaman asimi (90sn). PDF cok buyuk veya baglanti yavas olabilir.');
