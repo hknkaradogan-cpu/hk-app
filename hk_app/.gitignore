@@ -1,0 +1,35 @@
+# Flutter
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+build/
+*.g.dart
+*.freezed.dart
+
+# Env / secrets
+assets/env.txt
+.env
+*.env
+
+# Firebase
+google-services.json
+GoogleService-Info.plist
+firebase_app_id_file.json
+lib/firebase_options.dart
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Supabase local
+.supabase/
+supabase/.temp/
+
+# Pub cache
+.pub-cache/
+pubspec.lock

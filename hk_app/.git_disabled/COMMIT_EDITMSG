@@ -1,0 +1,6 @@
+feat: initial housekeeping app scaffold
+
+- Flutter project: login, supervisor panel, maid mobile
+- Supabase: schema, RLS policies, test seed data
+- FCM Edge Function (send-push)
+- .gitignore: excludes env.txt, google-services.json, firebase files
